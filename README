@@ -1,0 +1,6 @@
+How to use
+
+cd /your/repository/.git/hook
+wget https://raw.github.com/rafaelsdm/python-precommit-hook/master/pre-commit
+
+*NOTE* This will override your pre-commit file (if you have already created one)
