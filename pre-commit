@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+import os
+import subprocess
+
+arquivos_com_pdb = []
+
+status = subprocess.Popen(['git', 'status', '--porcelain'], stdout=subprocess.PIPE)
+for linha in status.stdout:
+    arquivo_status, arquivo = linha.split()
+    if not arquivo_status in ('??', 'D'):
+        arquivo = arquivo.strip()
+        grep = subprocess.Popen(['grep', 'pdb.set_trace', arquivo], stdout=subprocess.PIPE)
+        if len(grep.stdout.readlines()) > 0:
+            arquivos_com_pdb.append(arquivo)
+if arquivos_com_pdb:
+    print '''\n Os seguintes arquivos estão chamando pdb.set_trace():\n%s'''%('\n'.join(['\t%s'%arquivo for arquivo in arquivos_com_pdb]))
+    print '''\n O commit não vai ser feito (a menos que você use --no-verify, ai a culpa não é minha)\n'''
+    exit(1)
